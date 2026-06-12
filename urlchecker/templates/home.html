@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>URL Safety Dashboard</title>
+
+    <style>
+        body {
+            background: #0f172a;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 40px;
+            color: white;
+        }
+
+        .box {
+            background: #1e293b;
+            width: 520px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        input {
+            width: 80%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+        }
+
+        button {
+            background: #3b82f6;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        a {
+            color: #38bdf8;
+            text-decoration: none;
+        }
+
+        .safe {
+            color: #22c55e;
+            font-weight: bold;
+        }
+
+        .unsafe {
+            color: #ef4444;
+            font-weight: bold;
+        }
+
+        .bar {
+            width: 100%;
+            height: 20px;
+            background: #334155;
+            border-radius: 10px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 1s ease-in-out;
+        }
+
+        .green { background: #22c55e; }
+        .yellow { background: #facc15; }
+        .red { background: #ef4444; }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+    <h2>🔐 URL Safety Dashboard</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <!-- 🔥 INPUT RETAIN FIX -->
+        <input type="text" name="url"
+               placeholder="Enter URL"
+               value="{{ request.POST.url }}">
+
+        <br><br>
+
+        <button type="submit">Check URL</button>
+    </form>
+
+    {% if result %}
+
+        <br>
+
+        {% if result == "Safe URL" %}
+            <h3 class="safe">✔️ SAFE URL</h3>
+        {% else %}
+            <h3 class="unsafe">⚠️ UNSAFE URL</h3>
+        {% endif %}
+
+        <h3>Risk Score: {{ score }}%</h3>
+
+        <!-- PROGRESS BAR -->
+        <div class="bar">
+            <div id="bar" class="bar-fill"></div>
+        </div>
+
+        <br>
+
+        <!-- RISK LEVEL -->
+        {% if score <= 30 %}
+            <p style="color:#22c55e;">🟢 Low Risk</p>
+        {% elif score <= 70 %}
+            <p style="color:#facc15;">🟡 Medium Risk</p>
+        {% else %}
+            <p style="color:#ef4444;">🔴 High Risk</p>
+        {% endif %}
+
+    {% endif %}
+
+    <br><br>
+
+    <a href="/history/">📜 View History</a>
+
+</div>
+
+<script>
+    let score = {{ score|default:0 }};
+    let bar = document.getElementById("bar");
+
+    if (bar) {
+
+        if (score <= 30) {
+            bar.classList.add("green");
+        } else if (score <= 70) {
+            bar.classList.add("yellow");
+        } else {
+            bar.classList.add("red");
+        }
+
+        setTimeout(() => {
+            bar.style.width = score + "%";
+        }, 100);
+    }
+</script>
+
+</body>
+</html>

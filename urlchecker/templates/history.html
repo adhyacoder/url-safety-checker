@@ -1,0 +1,99 @@
+<style>
+    body {
+        background: #0f172a;
+        font-family: Arial, sans-serif;
+        color: white;
+        text-align: center;
+        padding: 30px;
+    }
+
+    .box {
+        width: 750px;
+        margin: auto;
+        background: #1e293b;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    h2 {
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 12px;
+        border-bottom: 1px solid #334155;
+        text-align: center;
+    }
+
+    th {
+        background: #334155;
+        color: #e2e8f0;
+    }
+
+    tr:hover {
+        background: #0f172a;
+    }
+
+    .safe {
+        color: #22c55e;
+        font-weight: bold;
+    }
+
+    .unsafe {
+        color: #ef4444;
+        font-weight: bold;
+    }
+
+    a {
+        display: inline-block;
+        margin-top: 15px;
+        color: #38bdf8;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    a:hover {
+        color: #0ea5e9;
+    }
+</style>
+
+<div class="box">
+
+<h2>📜 URL Check History</h2>
+
+<table>
+    <tr>
+        <th>URL</th>
+        <th>Result</th>
+        <th>Checked At</th>
+    </tr>
+
+    {% for item in urls %}
+    <tr>
+        <td>{{ item.url }}</td>
+
+        <td>
+            {% if item.result == "Safe URL" %}
+                <span class="safe">SAFE</span>
+            {% else %}
+                <span class="unsafe">UNSAFE</span>
+            {% endif %}
+        </td>
+
+        <td>{{ item.checked_at }}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+<br>
+
+<a href="/">⬅️ Back to Home</a>
+
+</div>
